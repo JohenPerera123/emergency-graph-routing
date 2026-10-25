@@ -125,4 +125,95 @@ def plot_network_with_path(
     print(f"[Figure saved] {filename}")
 
 
-__all__ = ["plot_network", "plot_network_with_path"]
+def plot_side_by_side(
+    G: nx.Graph,
+    static_path: Optional[List[int]],
+    dynamic_path: Optional[List[int]],
+    static_cost: float,
+    dynamic_cost: float,
+    title: str,
+    filename: Union[str, Path],
+    figsize: tuple = (16, 7),
+    seed: int = 42,
+) -> None:
+    """
+    Create a side-by-side comparison of static and dynamic routing.
+
+    Left panel: static route (red). Right panel: dynamic route (blue).
+    Both panels use the same spring layout so the routes are visually comparable.
+
+    Args:
+        G: The graph.
+        static_path: Node list of the static route.
+        dynamic_path: Node list of the dynamic route.
+        static_cost: Total cost of the static route.
+        dynamic_cost: Total cost of the dynamic route.
+        title: Overall figure title (suptitle).
+        filename: Output path.
+        figsize: Figure size.
+        seed: Spring layout seed.
+
+    Returns:
+        None. Side effect: writes a PNG file to disk.
+    """
+    fig, axes = plt.subplots(1, 2, figsize=figsize)
+    pos = nx.spring_layout(G, seed=seed)
+
+    nx.draw(
+        G,
+        pos,
+        ax=axes[0],
+        with_labels=True,
+        node_color="lightblue",
+        node_size=500,
+        font_size=9,
+        edge_color="gray",
+        width=1.5,
+        alpha=0.9,
+    )
+    if static_path and len(static_path) >= 2:
+        static_edges = list(zip(static_path[:-1], static_path[1:]))
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            ax=axes[0],
+            edgelist=static_edges,
+            edge_color="red",
+            width=3.5,
+        )
+    axes[0].set_title(f"Static Routing\nCost: {static_cost:.1f}")
+
+    nx.draw(
+        G,
+        pos,
+        ax=axes[1],
+        with_labels=True,
+        node_color="lightgreen",
+        node_size=500,
+        font_size=9,
+        edge_color="gray",
+        width=1.5,
+        alpha=0.9,
+    )
+    if dynamic_path and len(dynamic_path) >= 2:
+        dynamic_edges = list(zip(dynamic_path[:-1], dynamic_path[1:]))
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            ax=axes[1],
+            edgelist=dynamic_edges,
+            edge_color="blue",
+            width=3.5,
+        )
+    axes[1].set_title(f"Dynamic Routing\nCost: {dynamic_cost:.1f}")
+
+    fig.suptitle(title, fontsize=15)
+    plt.tight_layout()
+    filename = Path(filename)
+    filename.parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(filename, dpi=150, bbox_inches="tight")
+    plt.show()
+    print(f"[Figure saved] {filename}")
+
+
+__all__ = ["plot_network", "plot_network_with_path", "plot_side_by_side"]

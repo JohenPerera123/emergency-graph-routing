@@ -1,0 +1,5 @@
+disruption_factor,n_trials,n_diff,pct_diff
+1.0,50,0,0.0
+1.5,50,4,8.0
+2.0,50,5,10.0
+3.0,50,11,22.0
