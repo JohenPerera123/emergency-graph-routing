@@ -31,3 +31,19 @@ print(G.number_of_nodes(), G.number_of_edges())
 - [ ] **Phase 4**: Dynamic Routing Comparison & Sensitivity Analysis
 - [ ] **Phase 5**: Master Pipeline & Publication Figures
 - [ ] **Phase 6**: Interactive Dashboard & UI
+
+## Reproducibility Pipeline
+
+To regenerate every result in this repository from scratch, run:
+
+```bash
+python pipeline/run_all.py
+```
+
+To independently verify all generated outputs without running the notebooks:
+
+```bash
+python pipeline/verify_outputs.py
+```
+
+**Note (macOS):** Use `.venv/bin/python` or activate the venv first (`source .venv/bin/activate`). macOS does not ship a bare `python` command.
